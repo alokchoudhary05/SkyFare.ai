@@ -8,6 +8,7 @@ __pycache__/
 
 /myenv
 myenv
+flight_rf.pkl
 
 # Distribution / packaging
 .Python
