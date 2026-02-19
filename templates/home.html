@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyFare AI - Intelligent Flight Price Prediction</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <!-- BootStrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-airplane-engines"></i>
+                <span>SkyFare</span>
+                <span class="brand-ai">AI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/"><i class="bi bi-house-door"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#predict"><i class="bi bi-graph-up-arrow"></i> Predict</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about"><i class="bi bi-info-circle"></i> About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact"><i class="bi bi-envelope"></i> Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Predict Flight Prices with AI</h1>
+                <p class="hero-subtitle">Powered by advanced machine learning to help you find the best time to book your flights</p>
+                <a href="#predict" class="btn btn-hero">
+                    <i class="bi bi-lightning-charge"></i> Get Started
+                </a>
+            </div>
+        </div>
+        <div class="hero-decoration">
+            <div class="plane-trail"></div>
+        </div>
+    </section>
+
+    <!-- Main Prediction Section -->
+    <section id="predict" class="prediction-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">AI-Powered</span>
+                <h2 class="section-title">Flight Price Predictor</h2>
+                <p class="section-description">Enter your travel details below to get an accurate price prediction</p>
+            </div>
+
+            <div class="prediction-card">
+                <form action="/predict" method="post">
+                    <!-- Journey Details -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-calendar-event"></i> Journey Details
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Dep_Time">Departure Date & Time</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <input type="datetime-local" class="form-control" name="Dep_Time" id="Dep_Time" required
+                                            {% if dep_time %}value="{{ dep_time }}"{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Arrival_Time">Arrival Date & Time</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-box-arrow-in-right"></i>
+                                        <input type="datetime-local" class="form-control" name="Arrival_Time" id="Arrival_Time" required
+                                            {% if arr_time %}value="{{ arr_time }}"{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Route Details -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-geo-alt"></i> Route Details
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Source">Departure City</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-geo"></i>
+                                        <select class="form-control" name="Source" id="Source" required>
+                                            <option value="" disabled {% if not source %}selected{% endif %}>Select departure city</option>
+                                            <option value="Banglore" {% if source == 'Banglore' %}selected{% endif %}>Bangalore</option>
+                                            <option value="Chennai" {% if source == 'Chennai' %}selected{% endif %}>Chennai</option>
+                                            <option value="Cochin" {% if source == 'Cochin' %}selected{% endif %}>Cochin</option>
+                                            <option value="Delhi" {% if source == 'Delhi' %}selected{% endif %}>Delhi</option>
+                                            <option value="Hyderabad" {% if source == 'Hyderabad' %}selected{% endif %}>Hyderabad</option>
+                                            <option value="Kolkata" {% if source == 'Kolkata' %}selected{% endif %}>Kolkata</option>
+                                            <option value="Mumbai" {% if source == 'Mumbai' %}selected{% endif %}>Mumbai</option>
+                                            <!-- <option value="New Delhi" {% if source == 'New Delhi' %}selected{% endif %}>New Delhi</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Destination">Arrival City</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-geo-fill"></i>
+                                        <select class="form-control" name="Destination" id="Destination" required>
+                                            <option value="" disabled {% if not destination %}selected{% endif %}>Select arrival city</option>
+                                            <option value="Banglore" {% if destination == 'Banglore' %}selected{% endif %}>Bangalore</option>
+                                            <option value="Chennai" {% if destination == 'Chennai' %}selected{% endif %}>Chennai</option>
+                                            <option value="Cochin" {% if destination == 'Cochin' %}selected{% endif %}>Cochin</option>
+                                            <option value="Delhi" {% if destination == 'Delhi' %}selected{% endif %}>Delhi</option>
+                                            <option value="Hyderabad" {% if destination == 'Hyderabad' %}selected{% endif %}>Hyderabad</option>
+                                            <option value="Kolkata" {% if destination == 'Kolkata' %}selected{% endif %}>Kolkata</option>
+                                            <option value="Mumbai" {% if destination == 'Mumbai' %}selected{% endif %}>Mumbai</option>
+                                            <!-- <option value="New Delhi" {% if destination == 'New Delhi' %}selected{% endif %}>New Delhi</option> -->
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flight Preferences -->
+                    <div class="form-section">
+                        <h3 class="form-section-title">
+                            <i class="bi bi-sliders"></i> Flight Preferences
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="stops">Number of Stops</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-signpost-split"></i>
+                                        <select class="form-control" name="stops" id="stops" required>
+                                            <option value="0" {% if stops == '0' %}selected{% endif %}>Non-Stop</option>
+                                            <option value="1" {% if stops == '1' %}selected{% endif %}>1 Stop</option>
+                                            <option value="2" {% if stops == '2' %}selected{% endif %}>2 Stops</option>
+                                            <option value="3" {% if stops == '3' %}selected{% endif %}>3 Stops</option>
+                                            <option value="4" {% if stops == '4' %}selected{% endif %}>4 Stops</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="airline">Preferred Airline</label>
+                                    <div class="input-wrapper">
+                                        <i class="bi bi-airplane"></i>
+                                        <select class="form-control" name="airline" id="airline" required>
+                                            <option value="" disabled {% if not airline %}selected{% endif %}>Select airline</option>
+                                            <option value="Jet Airways" {% if airline == 'Jet Airways' %}selected{% endif %}>Jet Airways</option>
+                                            <option value="IndiGo" {% if airline == 'IndiGo' %}selected{% endif %}>IndiGo</option>
+                                            <option value="Air India" {% if airline == 'Air India' %}selected{% endif %}>Air India</option>
+                                            <option value="Multiple carriers" {% if airline == 'Multiple carriers' %}selected{% endif %}>Multiple Carriers</option>
+                                            <option value="SpiceJet" {% if airline == 'SpiceJet' %}selected{% endif %}>SpiceJet</option>
+                                            <option value="Vistara" {% if airline == 'Vistara' %}selected{% endif %}>Vistara</option>
+                                            <option value="Air Asia" {% if airline == 'Air Asia' %}selected{% endif %}>Air Asia</option>
+                                            <option value="GoAir" {% if airline == 'GoAir' %}selected{% endif %}>GoAir</option>
+                                            <option value="Multiple carriers Premium economy" {% if airline == 'Multiple carriers Premium economy' %}selected{% endif %}>Multiple Carriers (Premium Economy)</option>
+                                            <option value="Jet Airways Business" {% if airline == 'Jet Airways Business' %}selected{% endif %}>Jet Airways (Business)</option>
+                                            <option value="Vistara Premium economy" {% if airline == 'Vistara Premium economy' %}selected{% endif %}>Vistara (Premium Economy)</option>
+                                            <option value="Trujet" {% if airline == 'Trujet' %}selected{% endif %}>Trujet</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="form-submit">
+                        <button type="submit" class="btn btn-predict">
+                            <i class="bi bi-cpu"></i> Predict Price
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Prediction Result -->
+                {% if prediction_text %}
+                <div class="prediction-result">
+                    <div class="result-icon">
+                        <i class="bi bi-currency-rupee"></i>
+                    </div>
+                    <div class="result-content">
+                        <span class="result-label">Predicted Flight Price</span>
+                        <h3 class="result-value">{{ prediction_text }}</h3>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="about" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Why Choose Us</span>
+                <h2 class="section-title">Powered by Intelligence</h2>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <h4>Machine Learning</h4>
+                        <p>Advanced ML algorithm trained on thousands of flight records</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-lightning-charge"></i>
+                        </div>
+                        <h4>Instant Results</h4>
+                        <p>Get price predictions in milliseconds with our optimized inference engine</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="bi bi-graph-up"></i>
+                        </div>
+                        <h4>High Accuracy</h4>
+                        <p>Our model achieves high accuracy rate on test datasets</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="footer-brand">
+                        <h4><i class="bi bi-airplane-engines"></i> SkyFare<span>AI</span></h4>
+                        <p>Intelligent flight price prediction powered by machine learning</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="#predict">Predict</a></li>
+                            <li><a href="#about">About</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-contact">
+                        <h5>Connect</h5>
+                        <div class="social-links">
+                            <a href="https://github.com/alokchoudhary05"><i class="bi bi-github"></i></a>
+                            <a href="https://www.linkedin.com/in/alokk05/"><i class="bi bi-linkedin"></i></a>
+                            <a href="https://x.com/alokk05_"><i class="bi bi-twitter-x"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Alok Choudhary. Built with <i class="bi bi-heart-fill"></i></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Hide same city in the opposite dropdown
+        (function() {
+            const sourceSelect = document.getElementById('Source');
+            const destSelect = document.getElementById('Destination');
+
+            function filterOptions(changed, other) {
+                const selectedVal = changed.value;
+                // Show all options in the other dropdown first
+                Array.from(other.options).forEach(function(opt) {
+                    if (opt.value === '') return; // skip placeholder
+                    if (opt.value === selectedVal) {
+                        opt.hidden = true;
+                        opt.disabled = true;
+                        // If same city was selected in other, reset it
+                        if (other.value === selectedVal) {
+                            other.value = '';
+                        }
+                    } else {
+                        opt.hidden = false;
+                        opt.disabled = false;
+                    }
+                });
+            }
+
+            sourceSelect.addEventListener('change', function() {
+                filterOptions(sourceSelect, destSelect);
+            });
+
+            destSelect.addEventListener('change', function() {
+                filterOptions(destSelect, sourceSelect);
+            });
+
+            // Run on page load in case values are pre-filled
+            if (sourceSelect.value) filterOptions(sourceSelect, destSelect);
+            if (destSelect.value) filterOptions(destSelect, sourceSelect);
+        })();
+
+
+    </script>
+</body>
+
+</html>
