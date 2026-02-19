@@ -1,6 +1,3 @@
-# Large model files (exceed GitHub 100MB limit)
-*.pkl
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
